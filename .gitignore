@@ -1,0 +1,5 @@
+*.log
+TollData.py
+__pycache*
+image_archive
+tolldata
