@@ -7,6 +7,9 @@ import logging
 import datetime
 import time
 import TollData as td
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def get_vision_text(image_filename: str) -> str:
@@ -67,7 +70,10 @@ def archive_images():
 
     for image in image_files:
         logging.debug(f'Archiving File: {image}')
-        os.replace(cwd+'\\'+image, cwd+'\\'+archive+'\\'+image)
+        dir_format = '\\'
+        if os.name != 'nt':
+            dir_format = '/'
+        os.replace(cwd+dir_format+image, cwd+dir_format+archive+dir_format+image)
 
 
 def download_filename_images(urls: dict) -> dict:
@@ -84,8 +90,8 @@ def download_filename_images(urls: dict) -> dict:
 
 def main():
     initialize_logging()
-    end_time = datetime.datetime(2022, 8, 14)
-    image_download_interval_secs = 60
+    end_time = datetime.datetime(2022, 8, 17)
+    image_download_interval_secs = 60*15
     urls = {
         'east': ['img_url', 'img_output_filename', 'ai_text'],
         'west': ['img_url', 'img_output_filename', 'ai_text']
