@@ -7,9 +7,7 @@ import logging
 import datetime
 import time
 import TollData as td
-import ssl
 
-ssl._create_default_https_context = ssl._create_unverified_context
 
 def get_vision_text(image_filename: str) -> str:
     logging.debug(f'vision image filename: {image_filename}')
@@ -31,9 +29,19 @@ def get_vision_text(image_filename: str) -> str:
         matches = re.findall(match_pattern, description)
         output += matches
 
+        # include alt matching pattern, and matches
+        alt_pattern = '\d{3}'
+        alt_matches = re.findall(alt_pattern, description)
+        output += matches
+
     # convert elements to float
     for i in range(len(output)):
         output[i] = float(output[i])
+    
+    # convert large values to small ones
+    for i in output:
+        if i > 10:
+            output.append(i/100.00)
 
     return output
 
@@ -59,7 +67,7 @@ def archive_images():
 
     for image in image_files:
         logging.debug(f'Archiving File: {image}')
-        os.replace(cwd+'/'+image, cwd+'/'+archive+'/'+image)
+        os.replace(cwd+'\\'+image, cwd+'\\'+archive+'\\'+image)
 
 
 def download_filename_images(urls: dict) -> dict:
@@ -76,8 +84,8 @@ def download_filename_images(urls: dict) -> dict:
 
 def main():
     initialize_logging()
-    end_time = datetime.datetime(2022, 9, 9)
-    image_download_interval_secs = 60*15
+    end_time = datetime.datetime(2022, 8, 14)
+    image_download_interval_secs = 60
     urls = {
         'east': ['img_url', 'img_output_filename', 'ai_text'],
         'west': ['img_url', 'img_output_filename', 'ai_text']
