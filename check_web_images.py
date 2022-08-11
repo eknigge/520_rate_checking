@@ -35,16 +35,16 @@ def get_vision_text(image_filename: str) -> str:
         # include alt matching pattern, and matches
         alt_pattern = '\d{3}'
         alt_matches = re.findall(alt_pattern, description)
-        output += matches
+        output += alt_matches
 
     # convert elements to float
     for i in range(len(output)):
         output[i] = float(output[i])
     
     # convert large values to small ones
-    for i in output:
-        if i > 10:
-            output.append(i/100.00)
+    for value in output:
+        if value > 10:
+            output.append(value/100.00)
 
     return output
 
